@@ -32,14 +32,15 @@ end
 
 # Print the student names, one name on each line.
 def print(students)
-  # Two 'each' methods to return the index.    
+  # Iterate through the array. The .each_with_index method allows use of
+  # 0-based index.
   students.each_with_index do |student, index|
-    # puts student[:name].upcase
+    # .start_with?() method checks first character & .length method returns
+    # number of charaters in has key :name.
     if student[:name].upcase.start_with?("M") && student[:name].length < 12
+      # if condition met so output index, key and value.
       puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
-  # students.each.with_index(1) do |student, index|
-  # puts "#{index}. #{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 
