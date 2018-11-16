@@ -36,8 +36,8 @@ end
 
 # Print the header.
 def print_header
-  puts "The students of Villains Academy"
-  puts "-------------"
+  puts "The students of Villains Academy".center(100)
+  puts "-" * (100)
 end
 
 # Print the student names, one name on each line.
@@ -49,10 +49,10 @@ def print(students)
     if students[loop_count][:name].upcase.start_with?("M") && 
       students[loop_count][:name].length < 12
       # if condition met so output index, key and value.
-      puts "#{loop_count + 1}. #{students[loop_count][:name]}" +
+      puts ("#{loop_count + 1}. #{students[loop_count][:name]}" +
       " (#{students[loop_count][:cohort]} cohort)" +
       " - #{students[loop_count][:country_of_birth]}" + 
-      " - #{students[loop_count][:height]}"
+      " - #{students[loop_count][:height]}").center(100)
     end
     loop_count += 1
   end
@@ -60,7 +60,8 @@ end
 
 # Print the student count
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students"
+  puts ("-" * (50)).center(100)
+  puts "Overall, we have #{students.count} great students".center(100)
 end
 
 students = input_students
