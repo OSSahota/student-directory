@@ -32,8 +32,14 @@ end
 
 # Print the student names, one name on each line.
 def print(students)
-  students.each do |student|
-    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  # Two 'each' methods to return the index.    
+  students.each_with_index do |student, index|
+    # puts student[:name].upcase
+    if student[:name].upcase.start_with?("M") && student[:name].length < 12
+      puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    end
+  # students.each.with_index(1) do |student, index|
+  # puts "#{index}. #{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 
