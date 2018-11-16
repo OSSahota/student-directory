@@ -14,13 +14,23 @@ students = [
   ]
 
 # Print the header.
-puts "The students of Villians Academy"
-puts "-------------"
+def print_header
+  puts "The students of Villians Academy"
+  puts "-------------"
+end
 
 # Print the student names, one name on each line.
-students.each do |student|
-  puts student
+def print_names(students)
+  students.each do |student|
+    puts student
+  end
 end
 
 # Print the student count
-puts "Overall, we have #{students.count} great students"
+def print_footer(students)
+  puts "Overall, we have #{students.count} great students"
+end
+
+print_header
+print_names(students)
+print_footer(students)
