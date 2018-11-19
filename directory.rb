@@ -96,7 +96,7 @@ def print_footer(students)
 end
 
 students = input_students
-# print_header
-# print(students)
+# print_header # Method moved, to be called within print_by_cohort method.
+# print(students) # Method replaced in exercise 8 by print_by_cohort method.
 print_by_cohort(students)
 print_footer(students)
