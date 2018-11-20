@@ -1,21 +1,23 @@
 # an empty array accessible to all methods (global variable)
 @students = [] 
+@students_filename = "students.csv"
 
 def interactive_menu
   loop do
+    # 1. print the menu and ask the user what to do
     print_menu
+    # 2. read the input and save it into a variable
     process(STDIN.gets.chomp)
   end
 end
 
 def print_menu
-  # 1. print the menu and ask the user what to do
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
   puts "4. Load the list from students.csv"
   puts "9. Exit" # 9 because we'll be adding more items
-  # 2. read the input and save it into a variable
+
 end
 
 def process(selection)
@@ -46,19 +48,22 @@ def input_students
   # while the name is not empty, repeat this code
   while !name.empty? do
     # add the student hash to the array
-    @students << {name: name, cohort: :november}
+    # @students << {name: name, cohort: :november}
+    add_student(name, :november)
 
     puts "Now we have #{@students.count} students"
     
     # get another name from the user - correction applied
     name = STDIN.gets.chomp
   end
+  action_successful
 end
 
 def show_students
   print_header
   print_student_list
   print_footer
+  action_successful
 end
 
 def print_header
@@ -86,20 +91,27 @@ def save_students
     file.puts csv_line
   end
   file.close
+  action_successful
 end
 
-def load_students(filename = "students.csv")
+def load_students(filename = @students_filename)
   file = File.open(filename, "r")
   file.readlines.each do |line|
   name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
+    # @students << {name: name, cohort: cohort.to_sym}
+    add_student(name, cohort.to_sym)
   end
   file.close
+  action_successful
 end
 
 def try_load_students
   filename = ARGV.first # first argument from the command line
-  return if filename.nil? # get out of the method if it isn't given
+  # Adjusted to reference default_filename if no argument given on startup 
+  # via cl (step 14 ex 2).
+  if filename.nil?
+    filename = @students_filename
+  end
   if File.exists?(filename) # if it exists
     load_students(filename)
      puts "Loaded #{@students.count} from #{filename}"
@@ -107,6 +119,16 @@ def try_load_students
     puts "Sorry, #{filename} doesn't exist."
     exit # quit the program
   end
+end
+
+# Add student details to @students array (step 14 ex 1).
+def add_student(name, cohort)
+  @students << {name: name, cohort: cohort}
+end
+
+# Add student details to @students array (step 14 ex 1).
+def action_successful
+  puts "*** The chosen action was successful. ***" 
 end
 
 # load the file.
