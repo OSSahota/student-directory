@@ -86,15 +86,16 @@ def save_students
   puts "Please enter the filename and extension to save student details to"
   filename = STDIN.gets.chomp
   
-  # open the file for writing
-  file = File.open(filename, "w")
-  # iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  # open the file for writing in a code block (do..end) for auto closing at the end.
+  File.open(filename, "w") do |file|
+    # iterate over the array of students
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
+  
   action_successful
 end
 
@@ -106,20 +107,22 @@ def load_students(filename = "") # (step 14 ex 5)
   end
   
   # Check if file exists before opening and reading file lines.
-  if File.exists?(filename) # if it exists
+  if File.exists?(filename)
     # Reset @Student array to empty before loading next file.
     @students = [] 
-    file = File.open(filename, "r")
-    file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-      add_student(name, cohort.to_sym)
+
+    # Open file for reading in a code block (do..end) for auto closing at the end. 
+    File.open(filename, "r") do |file|
+      file.readlines.each do |line|
+        name, cohort = line.chomp.split(',')
+        add_student(name, cohort.to_sym)
+      end
     end
-    file.close
-    puts "Loaded #{@students.count} from #{filename}"
+    puts "Loaded #{@students.count} from #{filename}"  
+    
     action_successful
   else # if it doesn't exist
     puts "Sorry, '#{filename}' doesn't exist."
-    # exit # quit the program
   end
 end
 
@@ -130,8 +133,8 @@ def try_load_students
   if filename.nil?
     filename = (@students_default_filename)
   end
-  # Check file exists.
-  if File.exists?(filename) # if it exists
+  # Check if file exists before loading into from file to array.
+  if File.exists?(filename)
     load_students(filename)
   else # if it doesn't exist
     puts "Sorry, #{filename} doesn't exist."
