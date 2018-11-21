@@ -1,6 +1,7 @@
 # an empty array accessible to all methods (global variable)
-@students = [] 
-@students_filename = "students.csv"
+@students = []
+#global variable to store default student file.
+@students_default_filename = "students.csv"
 
 def interactive_menu
   loop do
@@ -14,8 +15,8 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to specified file"
+  puts "4. Load the list from specified file"
   puts "9. Exit" # 9 because we'll be adding more items
 
 end
@@ -48,7 +49,6 @@ def input_students
   # while the name is not empty, repeat this code
   while !name.empty? do
     # add the student hash to the array
-    # @students << {name: name, cohort: :november}
     add_student(name, :november)
 
     puts "Now we have #{@students.count} students"
@@ -82,8 +82,12 @@ def print_footer
 end
 
 def save_students
+  # Ask the user for the filename to save the student details to.
+  puts "Please enter the filename and extension to save student details to"
+  filename = STDIN.gets.chomp
+  
   # open the file for writing
-  file = File.open("students.csv", "w")
+  file = File.open(filename, "w")
   # iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
@@ -94,15 +98,29 @@ def save_students
   action_successful
 end
 
-def load_students(filename = @students_filename)
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-  name, cohort = line.chomp.split(',')
-    # @students << {name: name, cohort: cohort.to_sym}
-    add_student(name, cohort.to_sym)
+def load_students(filename = "") # (step 14 ex 5)
+  # Ask the user for the filename to load student details FROM.
+  if filename == ""
+    puts "Please enter name of file & extension to load student details from"
+    filename = STDIN.gets.chomp
   end
-  file.close
-  action_successful
+  
+  # Check if file exists before opening and reading file lines.
+  if File.exists?(filename) # if it exists
+    # Reset @Student array to empty before loading next file.
+    @students = [] 
+    file = File.open(filename, "r")
+    file.readlines.each do |line|
+    name, cohort = line.chomp.split(',')
+      add_student(name, cohort.to_sym)
+    end
+    file.close
+    puts "Loaded #{@students.count} from #{filename}"
+    action_successful
+  else # if it doesn't exist
+    puts "Sorry, '#{filename}' doesn't exist."
+    # exit # quit the program
+  end
 end
 
 def try_load_students
@@ -110,11 +128,11 @@ def try_load_students
   # Adjusted to reference default_filename if no argument given on startup 
   # via cl (step 14 ex 2).
   if filename.nil?
-    filename = @students_filename
+    filename = (@students_default_filename)
   end
+  # Check file exists.
   if File.exists?(filename) # if it exists
     load_students(filename)
-     puts "Loaded #{@students.count} from #{filename}"
   else # if it doesn't exist
     puts "Sorry, #{filename} doesn't exist."
     exit # quit the program
@@ -131,7 +149,7 @@ def action_successful
   puts "*** The chosen action was successful. ***" 
 end
 
-# load the file.
+# load file on startup.
 try_load_students
 # Call interactive_menu method.
 interactive_menu
