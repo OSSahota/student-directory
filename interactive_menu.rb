@@ -1,3 +1,5 @@
+require 'csv' # using csv standard library (step 14 ex 7)
+
 # an empty array accessible to all methods (global variable)
 @students = []
 #global variable to store default student file.
@@ -87,12 +89,16 @@ def save_students
   filename = STDIN.gets.chomp
   
   # open the file for writing in a code block (do..end) for auto closing at the end.
-  File.open(filename, "w") do |file|
+  CSV.open(filename, "w") do |file| # Changed from using 'File' class to using CSV library.
     # iterate over the array of students
     @students.each do |student|
       student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+      # The next 2 statements e.g. 'csv_line = student_data.join(",")' etcwould only be required if 
+      # using 'File' class to access/open the file as with File.open you append strings
+      # whereas with CSV.open you append rows represented as arrays.
+      # csv_line = student_data.join(",") # use with File.open
+      # file.puts csv_line # use with File.open
+      file.puts student_data # csv_line
     end
   end
   
@@ -112,12 +118,16 @@ def load_students(filename = "") # (step 14 ex 5)
     @students = [] 
 
     # Open file for reading in a code block (do..end) for auto closing at the end. 
-    File.open(filename, "r") do |file|
-      file.readlines.each do |line|
-        name, cohort = line.chomp.split(',')
-        add_student(name, cohort.to_sym)
-      end
+    CSV.foreach(filename, "r") do |row| # Changed from using 'File' class 'open' method to using 'CSV' library 'foreach' method.
+      add_student(row[0], row[1]) # Returns a row at a time represented as an array & not string like 'file.readlines'.
     end
+    # File class method below replaced by CSV library above.
+    # File.open(filename, "r") do |file|
+    #   file.readlines.each do |line|
+    #     name, cohort = line.chomp.split(',')
+    #     add_student(name, cohort.to_sym)
+    #   end
+    # end
     puts "Loaded #{@students.count} from #{filename}"  
     
     action_successful
